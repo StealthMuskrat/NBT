@@ -100,10 +100,6 @@ public final class SNBTParser implements MaxDepthIO {
 		} else if ("false".equalsIgnoreCase(s)) {
 			return new ByteTag(false);
 		}
-		if(s.length() == 1 && ptr.currentChar() == ';' && ptr.lookAhead(1) == 'c') {
-			ptr.skip(2);
-			return new CharTag(s.charAt(0));
-		}
 		return new StringTag(s);
 	}
 

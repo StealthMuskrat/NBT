@@ -28,7 +28,7 @@ public class StringPointer {
 					throw parseException("invalid escape of '" + c + "'");
 				}
 				escape = false;
-			} else {char f = '\\';
+			} else {
 				if (c == '\\') { //escape
 					escape = true;
 					if (sb != null) {
