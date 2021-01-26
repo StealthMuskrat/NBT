@@ -28,7 +28,7 @@ public class StringPointer {
 					throw parseException("invalid escape of '" + c + "'");
 				}
 				escape = false;
-			} else {
+			} else {char f = '\\';
 				if (c == '\\') { //escape
 					escape = true;
 					if (sb != null) {
@@ -46,6 +46,21 @@ public class StringPointer {
 			}
 		}
 		throw parseException("missing end quote");
+	}
+
+	public char parseQuotedChar() throws ParseException{
+		index++; //ignore beginning quote
+		char c = next();
+		if(c == '\\') {
+			c = next();
+			if(c != '\\' && c != '\'') {
+				throw parseException("invalid escape of '" + c + "'");
+			}
+		}
+		if(next() != '\'') {
+			throw parseException("missing end quote");
+		}
+		return c;
 	}
 
 	public boolean nextArrayElement() {

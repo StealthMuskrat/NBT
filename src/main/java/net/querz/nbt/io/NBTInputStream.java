@@ -2,20 +2,8 @@ package net.querz.nbt.io;
 
 import net.querz.io.ExceptionBiFunction;
 import net.querz.io.MaxDepthIO;
-import net.querz.nbt.tag.ByteArrayTag;
-import net.querz.nbt.tag.ByteTag;
-import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.DoubleTag;
-import net.querz.nbt.tag.EndTag;
-import net.querz.nbt.tag.FloatTag;
-import net.querz.nbt.tag.IntArrayTag;
-import net.querz.nbt.tag.IntTag;
-import net.querz.nbt.tag.ListTag;
-import net.querz.nbt.tag.LongArrayTag;
-import net.querz.nbt.tag.LongTag;
-import net.querz.nbt.tag.ShortTag;
-import net.querz.nbt.tag.StringTag;
-import net.querz.nbt.tag.Tag;
+import net.querz.nbt.tag.*;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +29,7 @@ public class NBTInputStream extends DataInputStream implements NBTInput, MaxDept
 		put(CompoundTag.ID, NBTInputStream::readCompound, CompoundTag.class);
 		put(IntArrayTag.ID, (i, d) -> readIntArray(i), IntArrayTag.class);
 		put(LongArrayTag.ID, (i, d) -> readLongArray(i), LongArrayTag.class);
+		put(CharTag.ID, (i,d) -> readChar(i), CharTag.class);
 	}
 
 	private static void put(byte id, ExceptionBiFunction<NBTInputStream, Integer, ? extends Tag<?>, IOException> reader, Class<?> clazz) {
@@ -96,6 +85,10 @@ public class NBTInputStream extends DataInputStream implements NBTInput, MaxDept
 
 	private static StringTag readString(NBTInputStream in) throws IOException {
 		return new StringTag(in.readUTF());
+	}
+
+	private static CharTag readChar(NBTInputStream in) throws IOException {
+		return new CharTag(in.readChar());
 	}
 
 	private static ByteArrayTag readByteArray(NBTInputStream in) throws IOException {

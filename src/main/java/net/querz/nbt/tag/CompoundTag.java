@@ -108,6 +108,10 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> implements Iterable<Ma
 		return get(key, StringTag.class);
 	}
 
+	public CharTag getCharTag(String key) {
+		return get(key, CharTag.class);
+	}
+
 	public ByteArrayTag getByteArrayTag(String key) {
 		return get(key, ByteArrayTag.class);
 	}
@@ -168,6 +172,11 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> implements Iterable<Ma
 		return t == null ? StringTag.ZERO_VALUE : t.getValue();
 	}
 
+	public char getChar(String key) {
+		CharTag t = getCharTag(key);
+		return t == null ? CharTag.ZERO_VALUE : t.getValue();
+	}
+
 	public byte[] getByteArray(String key) {
 		ByteArrayTag t = getByteArrayTag(key);
 		return t == null ? ByteArrayTag.ZERO_VALUE : t.getValue();
@@ -217,6 +226,10 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> implements Iterable<Ma
 
 	public Tag<?> putString(String key, String value) {
 		return put(key, new StringTag(value));
+	}
+
+	public Tag<?> putChar(String key, char value) {
+		return put(key, new CharTag(value));
 	}
 
 	public Tag<?> putByteArray(String key, byte[] value) {

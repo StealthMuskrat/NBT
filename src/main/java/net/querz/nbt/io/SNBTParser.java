@@ -1,21 +1,8 @@
 package net.querz.nbt.io;
 
 import net.querz.io.MaxDepthIO;
-import net.querz.nbt.tag.ArrayTag;
-import net.querz.nbt.tag.ByteArrayTag;
-import net.querz.nbt.tag.ByteTag;
-import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.DoubleTag;
-import net.querz.nbt.tag.EndTag;
-import net.querz.nbt.tag.FloatTag;
-import net.querz.nbt.tag.IntArrayTag;
-import net.querz.nbt.tag.IntTag;
-import net.querz.nbt.tag.ListTag;
-import net.querz.nbt.tag.LongArrayTag;
-import net.querz.nbt.tag.LongTag;
-import net.querz.nbt.tag.ShortTag;
-import net.querz.nbt.tag.StringTag;
-import net.querz.nbt.tag.Tag;
+import net.querz.nbt.tag.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -71,6 +58,9 @@ public final class SNBTParser implements MaxDepthIO {
 		if (ptr.currentChar() == '"') {
 			return new StringTag(ptr.parseQuotedString());
 		}
+		if(ptr.currentChar() == '\'') {
+			return new CharTag(ptr.parseQuotedChar());
+		}
 		String s = ptr.parseSimpleString();
 		if (s.isEmpty()) {
 			throw new ParseException("expected non empty value");
@@ -109,6 +99,10 @@ public final class SNBTParser implements MaxDepthIO {
 			return new ByteTag(true);
 		} else if ("false".equalsIgnoreCase(s)) {
 			return new ByteTag(false);
+		}
+		if(s.length() == 1 && ptr.currentChar() == ';' && ptr.lookAhead(1) == 'c') {
+			ptr.skip(2);
+			return new CharTag(s.charAt(0));
 		}
 		return new StringTag(s);
 	}

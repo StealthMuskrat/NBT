@@ -2,20 +2,8 @@ package net.querz.nbt.io;
 
 import net.querz.io.ExceptionTriConsumer;
 import net.querz.io.MaxDepthIO;
-import net.querz.nbt.tag.ByteArrayTag;
-import net.querz.nbt.tag.ByteTag;
-import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.DoubleTag;
-import net.querz.nbt.tag.EndTag;
-import net.querz.nbt.tag.FloatTag;
-import net.querz.nbt.tag.IntArrayTag;
-import net.querz.nbt.tag.IntTag;
-import net.querz.nbt.tag.ListTag;
-import net.querz.nbt.tag.LongArrayTag;
-import net.querz.nbt.tag.LongTag;
-import net.querz.nbt.tag.ShortTag;
-import net.querz.nbt.tag.StringTag;
-import net.querz.nbt.tag.Tag;
+import net.querz.nbt.tag.*;
+
 import java.io.Closeable;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
@@ -46,6 +34,7 @@ public class LittleEndianNBTOutputStream implements DataOutput, NBTOutput, MaxDe
 		put(CompoundTag.ID, LittleEndianNBTOutputStream::writeCompound, CompoundTag.class);
 		put(IntArrayTag.ID, (o, t, d) -> writeIntArray(o, t), IntArrayTag.class);
 		put(LongArrayTag.ID, (o, t, d) -> writeLongArray(o, t), LongArrayTag.class);
+		put(CharTag.ID, (o,t,d) -> writeChar(o,t), CharTag.class);
 	}
 
 	private static void put(byte id, ExceptionTriConsumer<LittleEndianNBTOutputStream, Tag<?>, Integer, IOException> f, Class<?> clazz) {
@@ -119,6 +108,10 @@ public class LittleEndianNBTOutputStream implements DataOutput, NBTOutput, MaxDe
 
 	private static void writeString(LittleEndianNBTOutputStream out, Tag<?> tag) throws IOException {
 		out.writeUTF(((StringTag) tag).getValue());
+	}
+
+	private static void writeChar(LittleEndianNBTOutputStream out, Tag<?> tag) throws IOException {
+		out.writeChar(((CharTag) tag).getValue());
 	}
 
 	private static void writeByteArray(LittleEndianNBTOutputStream out, Tag<?> tag) throws IOException {

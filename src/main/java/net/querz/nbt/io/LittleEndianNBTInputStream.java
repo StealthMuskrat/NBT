@@ -2,20 +2,8 @@ package net.querz.nbt.io;
 
 import net.querz.io.ExceptionBiFunction;
 import net.querz.io.MaxDepthIO;
-import net.querz.nbt.tag.ByteArrayTag;
-import net.querz.nbt.tag.ByteTag;
-import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.DoubleTag;
-import net.querz.nbt.tag.EndTag;
-import net.querz.nbt.tag.FloatTag;
-import net.querz.nbt.tag.IntArrayTag;
-import net.querz.nbt.tag.IntTag;
-import net.querz.nbt.tag.ListTag;
-import net.querz.nbt.tag.LongArrayTag;
-import net.querz.nbt.tag.LongTag;
-import net.querz.nbt.tag.ShortTag;
-import net.querz.nbt.tag.StringTag;
-import net.querz.nbt.tag.Tag;
+import net.querz.nbt.tag.*;
+
 import java.io.Closeable;
 import java.io.DataInput;
 import java.io.DataInputStream;
@@ -46,6 +34,7 @@ public class LittleEndianNBTInputStream implements DataInput, NBTInput, MaxDepth
 		put(CompoundTag.ID, LittleEndianNBTInputStream::readCompound, CompoundTag.class);
 		put(IntArrayTag.ID, (i, d) -> readIntArray(i), IntArrayTag.class);
 		put(LongArrayTag.ID, (i, d) -> readLongArray(i), LongArrayTag.class);
+		put(CharTag.ID, (i,d) -> readChar(i), CharTag.class);
 	}
 
 	private static void put(byte id, ExceptionBiFunction<LittleEndianNBTInputStream, Integer, ? extends Tag<?>, IOException> reader, Class<?> clazz) {
@@ -105,6 +94,10 @@ public class LittleEndianNBTInputStream implements DataInput, NBTInput, MaxDepth
 
 	private static StringTag readString(LittleEndianNBTInputStream in) throws IOException {
 		return new StringTag(in.readUTF());
+	}
+
+	private static CharTag readChar(LittleEndianNBTInputStream in) throws IOException {
+		return new CharTag(in.readChar());
 	}
 
 	private static ByteArrayTag readByteArray(LittleEndianNBTInputStream in) throws IOException {

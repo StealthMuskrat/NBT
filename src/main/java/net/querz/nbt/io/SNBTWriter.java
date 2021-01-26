@@ -1,20 +1,8 @@
 package net.querz.nbt.io;
 
 import net.querz.io.MaxDepthIO;
-import net.querz.nbt.tag.ByteArrayTag;
-import net.querz.nbt.tag.ByteTag;
-import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.DoubleTag;
-import net.querz.nbt.tag.EndTag;
-import net.querz.nbt.tag.FloatTag;
-import net.querz.nbt.tag.IntArrayTag;
-import net.querz.nbt.tag.IntTag;
-import net.querz.nbt.tag.ListTag;
-import net.querz.nbt.tag.LongArrayTag;
-import net.querz.nbt.tag.LongTag;
-import net.querz.nbt.tag.ShortTag;
-import net.querz.nbt.tag.StringTag;
-import net.querz.nbt.tag.Tag;
+import net.querz.nbt.tag.*;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Array;
@@ -97,6 +85,8 @@ public final class SNBTWriter implements MaxDepthIO {
 		case LongArrayTag.ID:
 			writeArray(((LongArrayTag) tag).getValue(), ((LongArrayTag) tag).length(), "L");
 			break;
+		case CharTag.ID:
+			writer.append(escapeChar(((CharTag) tag).getValue()));
 		default:
 			throw new IOException("unknown tag with id \"" + tag.getID() + "\"");
 		}
@@ -125,5 +115,15 @@ public final class SNBTWriter implements MaxDepthIO {
 			return sb.toString();
 		}
 		return s;
+	}
+
+	public static String escapeChar(char c) {
+		StringBuilder sb = new StringBuilder();
+		sb.append('\'');
+		if(c == '\\' || c == '\'') {
+			sb.append('\\');
+		}
+		sb.append(c).append('\'');
+		return sb.toString();
 	}
 }
