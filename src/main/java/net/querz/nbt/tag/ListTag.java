@@ -195,6 +195,10 @@ public class ListTag<T extends Tag<?>> extends Tag<List<T>> implements Iterable<
 		addUnchecked(new LongArrayTag(value));
 	}
 
+	public void addCharArray(char[] value) {
+		addUnchecked(new CharArrayTag(value));
+	}
+
 	public T get(int index) {
 		return getValue().get(index);
 	}
@@ -251,6 +255,10 @@ public class ListTag<T extends Tag<?>> extends Tag<List<T>> implements Iterable<
 
 	public ListTag<LongArrayTag> asLongArrayTagList() {
 		return asTypedList(LongArrayTag.class);
+	}
+
+	public ListTag<CharArrayTag> asCharArrayTagList() {
+		return asTypedList(CharArrayTag.class);
 	}
 
 	@SuppressWarnings("unchecked")
