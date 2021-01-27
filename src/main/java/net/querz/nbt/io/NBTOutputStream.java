@@ -30,6 +30,7 @@ public class NBTOutputStream extends DataOutputStream implements NBTOutput, MaxD
 		put(IntArrayTag.ID, (o, t, d) -> writeIntArray(o, t), IntArrayTag.class);
 		put(LongArrayTag.ID, (o, t, d) -> writeLongArray(o, t), LongArrayTag.class);
 		put(CharTag.ID, (o,t,d) -> writeChar(o,t), CharTag.class);
+		put(CharArrayTag.ID, (o,t,d) -> writeCharArray(o,t), CharArrayTag.class);
 	}
 
 	private static void put(byte id, ExceptionTriConsumer<NBTOutputStream, Tag<?>, Integer, IOException> f, Class<?> clazz) {
@@ -121,6 +122,13 @@ public class NBTOutputStream extends DataOutputStream implements NBTOutput, MaxD
 		out.writeInt(((LongArrayTag) tag).length());
 		for (long l : ((LongArrayTag) tag).getValue()) {
 			out.writeLong(l);
+		}
+	}
+
+	private static void writeCharArray(NBTOutputStream out, Tag<?> tag) throws IOException {
+		out.writeInt(((CharArrayTag) tag).length());
+		for(char c: ((CharArrayTag) tag).getValue()) {
+			out.writeChar(c);
 		}
 	}
 

@@ -30,6 +30,7 @@ public class NBTInputStream extends DataInputStream implements NBTInput, MaxDept
 		put(IntArrayTag.ID, (i, d) -> readIntArray(i), IntArrayTag.class);
 		put(LongArrayTag.ID, (i, d) -> readLongArray(i), LongArrayTag.class);
 		put(CharTag.ID, (i,d) -> readChar(i), CharTag.class);
+		put(CharArrayTag.ID, (i,d) -> readCharArray(i), CharArrayTag.class);
 	}
 
 	private static void put(byte id, ExceptionBiFunction<NBTInputStream, Integer, ? extends Tag<?>, IOException> reader, Class<?> clazz) {
@@ -110,11 +111,21 @@ public class NBTInputStream extends DataInputStream implements NBTInput, MaxDept
 	private static LongArrayTag readLongArray(NBTInputStream in) throws IOException {
 		int l = in.readInt();
 		long[] data = new long[l];
-		LongArrayTag iat = new LongArrayTag(data);
+		LongArrayTag lat = new LongArrayTag(data);
 		for (int i = 0; i < l; i++) {
 			data[i] = in.readLong();
 		}
-		return iat;
+		return lat;
+	}
+
+	private static CharArrayTag readCharArray(NBTInputStream in) throws IOException {
+		int l = in.readInt();
+		char[] data = new char[l];
+		CharArrayTag cat = new CharArrayTag(data);
+		for(int i = 0; i < l; i++) {
+			data[i] = in.readChar();
+		}
+		return cat;
 	}
 
 	private static ListTag<?> readListTag(NBTInputStream in, int maxDepth) throws IOException {

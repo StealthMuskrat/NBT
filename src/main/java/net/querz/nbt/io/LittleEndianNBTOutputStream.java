@@ -34,7 +34,8 @@ public class LittleEndianNBTOutputStream implements DataOutput, NBTOutput, MaxDe
 		put(CompoundTag.ID, LittleEndianNBTOutputStream::writeCompound, CompoundTag.class);
 		put(IntArrayTag.ID, (o, t, d) -> writeIntArray(o, t), IntArrayTag.class);
 		put(LongArrayTag.ID, (o, t, d) -> writeLongArray(o, t), LongArrayTag.class);
-		put(CharTag.ID, (o,t,d) -> writeChar(o,t), CharTag.class);
+		put(CharTag.ID, (o,t,d) -> writeChar(o, t), CharTag.class);
+		put(CharArrayTag.ID, (o,t,d) -> writeCharArray(o, t), CharArrayTag.class);
 	}
 
 	private static void put(byte id, ExceptionTriConsumer<LittleEndianNBTOutputStream, Tag<?>, Integer, IOException> f, Class<?> clazz) {
@@ -130,6 +131,13 @@ public class LittleEndianNBTOutputStream implements DataOutput, NBTOutput, MaxDe
 		out.writeInt(((LongArrayTag) tag).length());
 		for (long l : ((LongArrayTag) tag).getValue()) {
 			out.writeLong(l);
+		}
+	}
+
+	private static void writeCharArray(LittleEndianNBTOutputStream out, Tag<?> tag) throws IOException {
+		out.writeInt(((CharArrayTag) tag).length());
+		for(char c: ((CharArrayTag) tag).getValue()) {
+			out.writeChar(c);
 		}
 	}
 

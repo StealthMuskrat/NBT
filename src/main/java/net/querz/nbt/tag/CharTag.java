@@ -21,7 +21,7 @@ public class CharTag extends Tag<Character> implements Comparable<CharTag>{
 
     @Override
     public byte getID() {
-        return 13;
+        return ID;
     }
 
     @Override

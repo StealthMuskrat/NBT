@@ -179,6 +179,10 @@ public class ListTag<T extends Tag<?>> extends Tag<List<T>> implements Iterable<
 		addUnchecked(new StringTag(value));
 	}
 
+	public void addChar(char value) {
+		addUnchecked(new CharTag(value));
+	}
+
 	public void addByteArray(byte[] value) {
 		addUnchecked(new ByteArrayTag(value));
 	}
@@ -231,6 +235,10 @@ public class ListTag<T extends Tag<?>> extends Tag<List<T>> implements Iterable<
 
 	public ListTag<StringTag> asStringTagList() {
 		return asTypedList(StringTag.class);
+	}
+
+	public ListTag<CharTag> asCharTagList() {
+		return asTypedList(CharTag.class);
 	}
 
 	public ListTag<ByteArrayTag> asByteArrayTagList() {

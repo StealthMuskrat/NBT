@@ -87,6 +87,8 @@ public final class SNBTWriter implements MaxDepthIO {
 			break;
 		case CharTag.ID:
 			writer.append(escapeChar(((CharTag) tag).getValue()));
+		case CharArrayTag.ID:
+			writeArray(tag,0,"C");
 		default:
 			throw new IOException("unknown tag with id \"" + tag.getID() + "\"");
 		}
@@ -94,8 +96,12 @@ public final class SNBTWriter implements MaxDepthIO {
 
 	private void writeArray(Object array, int length, String prefix) throws IOException {
 		writer.append('[').append(prefix).write(';');
-		for (int i = 0; i < length; i++) {
-			writer.append(i == 0 ? "" : ",").write(Array.get(array, i).toString());
+		if(array instanceof CharArrayTag) {
+			StringBuilder sb = new StringBuilder("'").append(escapeChar(((CharArrayTag) array).getValue())).append("'");
+		}else {
+			for (int i = 0; i < length; i++) {
+				writer.append(i == 0 ? "" : ",").write(Array.get(array, i).toString());
+			}
 		}
 		writer.write(']');
 	}
@@ -117,13 +123,16 @@ public final class SNBTWriter implements MaxDepthIO {
 		return s;
 	}
 
-	public static String escapeChar(char c) {
+	public static String escapeChar(char... c) {
 		StringBuilder sb = new StringBuilder();
 		sb.append('\'');
-		if(c == '\\' || c == '\'') {
-			sb.append('\\');
+		for(char r : c) {
+			if (r == '\\' || r == '\'') {
+				sb.append('\\');
+			}
+			sb.append(r);
 		}
-		sb.append(c).append('\'');
+		sb.append('\'');
 		return sb.toString();
 	}
 }

@@ -46,7 +46,7 @@ public final class SNBTParser implements MaxDepthIO {
 				return parseCompoundTag(maxDepth);
 			case '[':
 				if (ptr.hasCharsLeft(2) && ptr.lookAhead(1) != '"' && ptr.lookAhead(2) == ';') {
-					return parseNumArray();
+					return parseArray();
 				}
 				return parseListTag(maxDepth);
 		}
@@ -146,12 +146,14 @@ public final class SNBTParser implements MaxDepthIO {
 		return list;
 	}
 
-	private ArrayTag<?> parseNumArray() throws ParseException {
+	private ArrayTag<?> parseArray() throws ParseException {
 		ptr.expectChar('[');
 		char arrayType = ptr.next();
 		ptr.expectChar(';');
 		ptr.skipWhitespace();
 		switch (arrayType) {
+			case 'C':
+				return parseCharArrayTag();
 			case 'B':
 				return parseByteArrayTag();
 			case 'I':
@@ -160,6 +162,28 @@ public final class SNBTParser implements MaxDepthIO {
 				return parseLongArrayTag();
 		}
 		throw new ParseException("invalid array type '" + arrayType + "'");
+	}
+
+	private CharArrayTag parseCharArrayTag() throws ParseException {
+		ptr.expectChar('\'');
+		List<Character> charList = new ArrayList<>();
+		while(ptr.currentChar() != '\'') {
+			char c = ptr.next();
+			if(c == '\\') {
+				c = ptr.next();
+				if(c != '\\' && c != '\'') {
+					throw ptr.parseException("invalid escape of '" + c + "'");
+				}
+			}
+			charList.add(c);
+		}
+		ptr.skipWhitespace();
+		ptr.expectChar(']');
+		char[] chars = new char[charList.size()];
+		for(int i = 0; i < charList.size(); i++) {
+			chars[i] = charList.get(i);
+		}
+		return new CharArrayTag(chars);
 	}
 
 	private ByteArrayTag parseByteArrayTag() throws ParseException {
