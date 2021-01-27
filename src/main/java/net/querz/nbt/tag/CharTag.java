@@ -1,6 +1,6 @@
 package net.querz.nbt.tag;
 
-public class CharTag extends Tag<Character> implements Comparable<CharTag>{
+public class CharTag extends Tag<Character> implements Comparable<CharTag> {
 
     public static final byte ID = 13;
     public static final char ZERO_VALUE = '\u0000';

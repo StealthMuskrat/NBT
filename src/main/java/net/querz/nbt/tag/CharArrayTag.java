@@ -1,8 +1,9 @@
 package net.querz.nbt.tag;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
-public class CharArrayTag extends ArrayTag<char[]> implements Comparable<CharArrayTag>{
+public class CharArrayTag extends ArrayTag<char[]> implements Comparable<CharArrayTag> {
 
     public static final byte ID = 14;
     public static final char[] ZERO_VALUE = new char[0];
@@ -42,11 +43,11 @@ public class CharArrayTag extends ArrayTag<char[]> implements Comparable<CharArr
 
     @Override
     protected String arrayToString(String prefix, String suffix) {
-        StringBuilder sb = new StringBuilder("[\"");
-        for(char c: getValue()) {
-            sb.append(escapeString(c+"",false));
+        StringBuilder sb = new StringBuilder("[");
+        for(int i = 0; i < length(); i++) {
+            sb.append(i == 0 ? "" : ",").append(escapeString(Array.get(getValue(),i)+"",false));
         }
-        sb.append("\"]");
+        sb.append("]");
         return sb.toString();
     }
 }
