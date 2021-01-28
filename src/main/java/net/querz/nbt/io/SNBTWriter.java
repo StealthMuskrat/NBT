@@ -6,6 +6,7 @@ import net.querz.nbt.tag.*;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -88,7 +89,9 @@ public final class SNBTWriter implements MaxDepthIO {
 		case CharTag.ID:
 			writer.append(escapeChar(((CharTag) tag).getValue()));
 		case CharArrayTag.ID:
-			writeArray(tag,0,"C");
+			writeArray(((CharArrayTag) tag).getValue(),0,"C");
+		case StringArrayTag.ID:
+			writeArray(((StringArrayTag) tag).getValue(), ((StringArrayTag) tag).length(), "W");
 		default:
 			throw new IOException("unknown tag with id \"" + tag.getID() + "\"");
 		}
@@ -96,8 +99,12 @@ public final class SNBTWriter implements MaxDepthIO {
 
 	private void writeArray(Object array, int length, String prefix) throws IOException {
 		writer.append('[').append(prefix).write(';');
-		if(array instanceof CharArrayTag) {
-			StringBuilder sb = new StringBuilder("'").append(escapeChar(((CharArrayTag) array).getValue())).append("'");
+		if(array instanceof char[]) {
+			writer.append(escapeString(new String((char[]) array)));
+		}else if(array instanceof String[]) {
+			for(int i = 0; i < length; i++) {
+				writer.append(i == 0 ? "" : ",").write(escapeString((String) Array.get(array, i)));
+			}
 		}else {
 			for (int i = 0; i < length; i++) {
 				writer.append(i == 0 ? "" : ",").write(Array.get(array, i).toString());
@@ -123,16 +130,13 @@ public final class SNBTWriter implements MaxDepthIO {
 		return s;
 	}
 
-	public static String escapeChar(char... c) {
+	public static String escapeChar(char c) {
 		StringBuilder sb = new StringBuilder();
 		sb.append('\'');
-		for(char r : c) {
-			if (r == '\\' || r == '\'') {
-				sb.append('\\');
-			}
-			sb.append(r);
+		if(c == '\\' || c == '\'') {
+			sb.append('\\');
 		}
-		sb.append('\'');
+		sb.append(c).append('\'');
 		return sb.toString();
 	}
 }

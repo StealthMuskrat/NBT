@@ -110,7 +110,6 @@ public final class SNBTParser implements MaxDepthIO {
 
 		ptr.skipWhitespace();
 		while (ptr.hasNext() && ptr.currentChar() != '}') {
-			ptr.skipWhitespace();
 			String key = ptr.currentChar() == '"' ? ptr.parseQuotedString() : ptr.parseSimpleString();
 			if (key.isEmpty()) {
 				throw new ParseException("empty keys are not allowed");
@@ -152,45 +151,24 @@ public final class SNBTParser implements MaxDepthIO {
 		ptr.expectChar(';');
 		ptr.skipWhitespace();
 		switch (arrayType) {
-			case 'C':
-				return parseCharArrayTag();
 			case 'B':
 				return parseByteArrayTag();
 			case 'I':
 				return parseIntArrayTag();
 			case 'L':
 				return parseLongArrayTag();
+			case 'C':
+				return parseCharArrayTag();
+			case 'W':
+				return parseStringArrayTag();
 		}
 		throw new ParseException("invalid array type '" + arrayType + "'");
-	}
-
-	private CharArrayTag parseCharArrayTag() throws ParseException {
-		ptr.expectChar('\'');
-		List<Character> charList = new ArrayList<>();
-		while(ptr.currentChar() != '\'') {
-			char c = ptr.next();
-			if(c == '\\') {
-				c = ptr.next();
-				if(c != '\\' && c != '\'') {
-					throw ptr.parseException("invalid escape of '" + c + "'");
-				}
-			}
-			charList.add(c);
-		}
-		ptr.skipWhitespace();
-		ptr.expectChar(']');
-		char[] chars = new char[charList.size()];
-		for(int i = 0; i < charList.size(); i++) {
-			chars[i] = charList.get(i);
-		}
-		return new CharArrayTag(chars);
 	}
 
 	private ByteArrayTag parseByteArrayTag() throws ParseException {
 		List<Byte> byteList = new ArrayList<>();
 		while (ptr.currentChar() != ']') {
 			String s = ptr.parseSimpleString();
-			ptr.skipWhitespace();
 			if (NUMBER_PATTERN.matcher(s).matches()) {
 				try {
 					byteList.add(Byte.parseByte(s));
@@ -216,7 +194,6 @@ public final class SNBTParser implements MaxDepthIO {
 		List<Integer> intList = new ArrayList<>();
 		while (ptr.currentChar() != ']') {
 			String s = ptr.parseSimpleString();
-			ptr.skipWhitespace();
 			if (NUMBER_PATTERN.matcher(s).matches()) {
 				try {
 					intList.add(Integer.parseInt(s));
@@ -238,7 +215,6 @@ public final class SNBTParser implements MaxDepthIO {
 		List<Long> longList = new ArrayList<>();
 		while (ptr.currentChar() != ']') {
 			String s = ptr.parseSimpleString();
-			ptr.skipWhitespace();
 			if (NUMBER_PATTERN.matcher(s).matches()) {
 				try {
 					longList.add(Long.parseLong(s));
@@ -254,5 +230,25 @@ public final class SNBTParser implements MaxDepthIO {
 		}
 		ptr.expectChar(']');
 		return new LongArrayTag(longList.stream().mapToLong(l -> l).toArray());
+	}
+
+	private CharArrayTag parseCharArrayTag() throws ParseException {
+		String value = ptr.currentChar() == '"' ? ptr.parseQuotedString() : ptr.parseSimpleString();
+		char[] chars = value.toCharArray();
+		ptr.skipWhitespace();
+		ptr.expectChar(']');
+		return new CharArrayTag(chars);
+	}
+
+	private StringArrayTag parseStringArrayTag() throws ParseException {
+		List<String> stringList = new ArrayList<>();
+		while(ptr.currentChar() != ']') {
+			stringList.add(ptr.currentChar() == '"' ? ptr.parseQuotedString() : ptr.parseSimpleString());
+			if(!ptr.nextArrayElement()) {
+				break;
+			}
+		}
+		ptr.expectChar(']');
+		return new StringArrayTag((String[]) stringList.toArray());
 	}
 }
