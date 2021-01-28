@@ -37,6 +37,9 @@ public class LittleEndianNBTOutputStream implements DataOutput, NBTOutput, MaxDe
 		put(CharTag.ID, (o,t,d) -> writeChar(o, t), CharTag.class);
 		put(CharArrayTag.ID, (o,t,d) -> writeCharArray(o, t), CharArrayTag.class);
 		put(StringArrayTag.ID, (o,t,d) -> writeStringArray(o, t), StringArrayTag.class);
+		put(ShortArrayTag.ID, (o,t,d) -> writeShortArray(o, t), ShortArrayTag.class);
+		put(FloatArrayTag.ID, (o,t,d) -> writeFloatArray(o, t), FloatArrayTag.class);
+		put(DoubleArrayTag.ID, (o,t,d) -> writeDoubleArray(o, t), DoubleArrayTag.class);
 	}
 
 	private static void put(byte id, ExceptionTriConsumer<LittleEndianNBTOutputStream, Tag<?>, Integer, IOException> f, Class<?> clazz) {
@@ -146,6 +149,25 @@ public class LittleEndianNBTOutputStream implements DataOutput, NBTOutput, MaxDe
 		out.writeInt(((StringArrayTag) tag).length());
 		for(String s : ((StringArrayTag) tag).getValue()) {
 			out.writeUTF(s);
+		}
+	}
+
+	private static void writeShortArray(LittleEndianNBTOutputStream out, Tag<?> tag) throws IOException {
+		out.writeInt(((ShortArrayTag) tag).length());
+		for(short s : ((ShortArrayTag) tag).getValue()) {
+			out.writeShort(s);
+		}
+	}
+	private static void writeFloatArray(LittleEndianNBTOutputStream out, Tag<?> tag) throws IOException {
+		out.writeInt(((FloatArrayTag) tag).length());
+		for(float f : ((FloatArrayTag) tag).getValue()) {
+			out.writeFloat(f);
+		}
+	}
+	private static void writeDoubleArray(LittleEndianNBTOutputStream out, Tag<?> tag) throws IOException {
+		out.writeInt(((DoubleArrayTag) tag).length());
+		for(double d : ((DoubleArrayTag) tag).getValue()) {
+			out.writeDouble(d);
 		}
 	}
 

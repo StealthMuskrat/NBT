@@ -132,6 +132,18 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> implements Iterable<Ma
 		return get(key, StringArrayTag.class);
 	}
 
+	public ShortArrayTag getShortArrayTag(String key) {
+		return get(key, ShortArrayTag.class);
+	}
+
+	public FloatArrayTag getFloatArrayTag(String key) {
+		return get(key, FloatArrayTag.class);
+	}
+
+	public DoubleArrayTag getDoubleArrayTag(String key) {
+		return get(key, DoubleArrayTag.class);
+	}
+
 	public ListTag<?> getListTag(String key) {
 		return get(key, ListTag.class);
 	}
@@ -210,6 +222,21 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> implements Iterable<Ma
 		return t == null ? StringArrayTag.ZERO_VALUE : t.getValue();
 	}
 
+	public short[] getShortArray(String key) {
+		ShortArrayTag t = getShortArrayTag(key);
+		return t == null ? ShortArrayTag.ZERO_VALUE : t.getValue();
+	}
+
+	public float[] getFloatArray(String key) {
+		FloatArrayTag t = getFloatArrayTag(key);
+		return t == null ? FloatArrayTag.ZERO_VALUE : t.getValue();
+	}
+
+	public double[] getDoubleArray(String key) {
+		DoubleArrayTag t = getDoubleArrayTag(key);
+		return t == null ? DoubleArrayTag.ZERO_VALUE : t.getValue();
+	}
+
 	public Tag<?> put(String key, Tag<?> tag) {
 		return getValue().put(Objects.requireNonNull(key), Objects.requireNonNull(tag));
 	}
@@ -268,6 +295,18 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> implements Iterable<Ma
 
 	public Tag<?> putStringArray(String key, String[] value) {
 		return put(key, new StringArrayTag(value));
+	}
+
+	public Tag<?> putShortArray(String key, short[] value) {
+		return put(key, new ShortArrayTag(value));
+	}
+
+	public Tag<?> putFloatArray(String key, float[] value) {
+		return put(key, new FloatArrayTag(value));
+	}
+
+	public Tag<?> putDoubleArray(String key, double[] value) {
+		return put(key, new DoubleArrayTag(value));
 	}
 
 	@Override

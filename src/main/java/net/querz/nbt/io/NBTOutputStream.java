@@ -32,6 +32,9 @@ public class NBTOutputStream extends DataOutputStream implements NBTOutput, MaxD
 		put(CharTag.ID, (o,t,d) -> writeChar(o, t), CharTag.class);
 		put(CharArrayTag.ID, (o,t,d) -> writeCharArray(o, t), CharArrayTag.class);
 		put(StringArrayTag.ID, (o,t,d) -> writeStringArray(o, t), StringArrayTag.class);
+		put(ShortArrayTag.ID, (o,t,d) -> writeShortArray(o, t), ShortArrayTag.class);
+		put(FloatArrayTag.ID, (o,t,d) -> writeFloatArray(o, t), FloatArrayTag.class);
+		put(DoubleArrayTag.ID, (o,t,d) -> writeDoubleArray(o, t), DoubleArrayTag.class);
 	}
 
 	private static void put(byte id, ExceptionTriConsumer<NBTOutputStream, Tag<?>, Integer, IOException> f, Class<?> clazz) {
@@ -139,6 +142,28 @@ public class NBTOutputStream extends DataOutputStream implements NBTOutput, MaxD
 			out.writeUTF(s);
 		}
 	}
+
+	private static void writeShortArray(NBTOutputStream out, Tag<?> tag) throws IOException {
+		out.writeInt(((ShortArrayTag) tag).length());
+		for(short s : ((ShortArrayTag) tag).getValue()) {
+			out.writeShort(s);
+		}
+	}
+
+	private static void writeFloatArray(NBTOutputStream out, Tag<?> tag) throws IOException {
+		out.writeInt(((FloatArrayTag) tag).length());
+		for(float f : ((FloatArrayTag) tag).getValue()) {
+			out.writeFloat(f);
+		}
+	}
+
+	private static void writeDoubleArray(NBTOutputStream out, Tag<?> tag) throws IOException {
+		out.writeInt(((DoubleArrayTag) tag).length());
+		for(double d : ((DoubleArrayTag) tag).getValue()) {
+			out.writeDouble(d);
+		}
+	}
+
 	private static void writeList(NBTOutputStream out, Tag<?> tag, int maxDepth) throws IOException {
 		out.writeByte(idFromClass(((ListTag<?>) tag).getTypeClass()));
 		out.writeInt(((ListTag<?>) tag).size());

@@ -6,7 +6,6 @@ import net.querz.nbt.tag.*;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -88,10 +87,22 @@ public final class SNBTWriter implements MaxDepthIO {
 			break;
 		case CharTag.ID:
 			writer.append(escapeChar(((CharTag) tag).getValue()));
+			break;
 		case CharArrayTag.ID:
 			writeArray(((CharArrayTag) tag).getValue(),0,"C");
+			break;
 		case StringArrayTag.ID:
-			writeArray(((StringArrayTag) tag).getValue(), ((StringArrayTag) tag).length(), "W");
+			writeArray(((StringArrayTag) tag).getValue(), ((StringArrayTag) tag).length(), "T");
+			break;
+		case ShortArrayTag.ID:
+			writeArray(((ShortArrayTag) tag).getValue(), ((ShortArrayTag) tag).length(), "S");
+			break;
+		case FloatArrayTag.ID:
+			writeArray(((FloatArrayTag) tag).getValue(), ((FloatArrayTag) tag).length(), "F");
+			break;
+		case DoubleArrayTag.ID:
+			writeArray(((DoubleArrayTag) tag).getValue(), ((DoubleArrayTag) tag).length(), "D");
+			break;
 		default:
 			throw new IOException("unknown tag with id \"" + tag.getID() + "\"");
 		}

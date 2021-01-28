@@ -159,7 +159,7 @@ public final class SNBTParser implements MaxDepthIO {
 				return parseLongArrayTag();
 			case 'C':
 				return parseCharArrayTag();
-			case 'W':
+			case 'T':
 				return parseStringArrayTag();
 		}
 		throw new ParseException("invalid array type '" + arrayType + "'");
@@ -250,5 +250,80 @@ public final class SNBTParser implements MaxDepthIO {
 		}
 		ptr.expectChar(']');
 		return new StringArrayTag((String[]) stringList.toArray());
+	}
+
+	private ShortArrayTag parseShortArrayTag() throws ParseException {
+		List<Short> shortList = new ArrayList<>();
+		while (ptr.currentChar() != ']') {
+			String s = ptr.parseSimpleString();
+			if (NUMBER_PATTERN.matcher(s).matches()) {
+				try {
+					shortList.add(Short.parseShort(s));
+				} catch (NumberFormatException ex) {
+					throw ptr.parseException("short not in range: \"" + s + "\"");
+				}
+			} else {
+				throw ptr.parseException("invalid short in ShortArrayTag: \"" + s + "\"");
+			}
+			if (!ptr.nextArrayElement()) {
+				break;
+			}
+		}
+		ptr.expectChar(']');
+		short[] shorts = new short[shortList.size()];
+		for(int i = 0; i < shortList.size(); i++) {
+			shorts[i] = shortList.get(i);
+		}
+		return new ShortArrayTag(shorts);
+	}
+
+	private FloatArrayTag parseFloatArrayTag() throws ParseException {
+		List<Float> floatList = new ArrayList<>();
+		while (ptr.currentChar() != ']') {
+			String s = ptr.parseSimpleString();
+			if (NUMBER_PATTERN.matcher(s).matches()) {
+				try {
+					floatList.add(Float.parseFloat(s));
+				} catch (NumberFormatException ex) {
+					throw ptr.parseException("float not in range: \"" + s + "\"");
+				}
+			} else {
+				throw ptr.parseException("invalid float in FloatArrayTag: \"" + s + "\"");
+			}
+			if (!ptr.nextArrayElement()) {
+				break;
+			}
+		}
+		ptr.expectChar(']');
+		float[] floats = new float[floatList.size()];
+		for(int i = 0; i < floatList.size(); i++) {
+			floats[i] = floatList.get(i);
+		}
+		return new FloatArrayTag(floats);
+	}
+
+	private DoubleArrayTag parseDoubleArrayTag() throws ParseException {
+		List<Double> doubleList = new ArrayList<>();
+		while (ptr.currentChar() != ']') {
+			String s = ptr.parseSimpleString();
+			if (NUMBER_PATTERN.matcher(s).matches()) {
+				try {
+					doubleList.add(Double.parseDouble(s));
+				} catch (NumberFormatException ex) {
+					throw ptr.parseException("double not in range: \"" + s + "\"");
+				}
+			} else {
+				throw ptr.parseException("invalid double in DoubleArrayTag: \"" + s + "\"");
+			}
+			if (!ptr.nextArrayElement()) {
+				break;
+			}
+		}
+		ptr.expectChar(']');
+		double[] doubles = new double[doubleList.size()];
+		for(int i = 0; i < doubleList.size(); i++) {
+			doubles[i] = doubleList.get(i);
+		}
+		return new DoubleArrayTag(doubles);
 	}
 }

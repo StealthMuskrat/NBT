@@ -37,6 +37,9 @@ public class LittleEndianNBTInputStream implements DataInput, NBTInput, MaxDepth
 		put(CharTag.ID, (i,d) -> readChar(i), CharTag.class);
 		put(CharArrayTag.ID, (i,d) -> readCharArray(i), CharArrayTag.class);
 		put(StringArrayTag.ID, (i,d) -> readStringArray(i), StringArrayTag.class);
+		put(ShortArrayTag.ID, (i,d) -> readShortArray(i), ShortArrayTag.class);
+		put(FloatArrayTag.ID, (i,d) -> readFloatArray(i), FloatArrayTag.class);
+		put(DoubleArrayTag.ID, (i,d) -> readDoubleArray(i), DoubleArrayTag.class);
 	}
 
 	private static void put(byte id, ExceptionBiFunction<LittleEndianNBTInputStream, Integer, ? extends Tag<?>, IOException> reader, Class<?> clazz) {
@@ -147,6 +150,38 @@ public class LittleEndianNBTInputStream implements DataInput, NBTInput, MaxDepth
 		}
 		return sat;
 	}
+
+	private static ShortArrayTag readShortArray(LittleEndianNBTInputStream in) throws IOException {
+		int l = in.readInt();
+		short[] data = new short[l];
+		ShortArrayTag sat = new ShortArrayTag(data);
+		for(int i = 0; i < l; i++) {
+			data[i] = in.readShort();
+		}
+		return sat;
+	}
+
+	private static FloatArrayTag readFloatArray(LittleEndianNBTInputStream in) throws IOException {
+		int l = in.readInt();
+		float[] data = new float[l];
+		FloatArrayTag fat = new FloatArrayTag(data);
+		for(int i = 0; i < l; i++) {
+			data[i] = in.readFloat();
+		}
+		return fat;
+	}
+
+	private static DoubleArrayTag readDoubleArray(LittleEndianNBTInputStream in) throws IOException {
+		int l = in.readInt();
+		double[] data = new double[l];
+		DoubleArrayTag sat = new DoubleArrayTag(data);
+		for(int i = 0; i < l; i++) {
+			data[i] = in.readDouble();
+		}
+		return sat;
+	}
+
+
 
 	private static ListTag<?> readListTag(LittleEndianNBTInputStream in, int maxDepth) throws IOException {
 		byte listType = in.readByte();
