@@ -100,7 +100,7 @@ public final class SNBTWriter implements MaxDepthIO {
 	private void writeArray(Object array, int length, String prefix) throws IOException {
 		writer.append('[').append(prefix).write(';');
 		if(array instanceof char[]) {
-			writer.append(escapeString(new String((char[]) array)));
+			writer.write(escapeString(new String((char[]) array)));
 		}else if(array instanceof String[]) {
 			for(int i = 0; i < length; i++) {
 				writer.append(i == 0 ? "" : ",").write(escapeString((String) Array.get(array, i)));
