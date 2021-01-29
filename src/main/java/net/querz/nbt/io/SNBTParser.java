@@ -161,6 +161,12 @@ public final class SNBTParser implements MaxDepthIO {
 				return parseCharArrayTag();
 			case 'T':
 				return parseStringArrayTag();
+			case 'S':
+				return parseShortArrayTag();
+			case 'F':
+				return parseFloatArrayTag();
+			case 'D':
+				return parseDoubleArrayTag();
 		}
 		throw new ParseException("invalid array type '" + arrayType + "'");
 	}
