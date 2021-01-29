@@ -15,9 +15,26 @@ public class ByteArrayTag extends ArrayTag<byte[]> implements Comparable<ByteArr
 		super(value);
 	}
 
+	public ByteArrayTag(boolean[] value) {
+		super(ZERO_VALUE);
+		byte[] data = new byte[value.length];
+		for(int i = 0; i < value.length; i++) {
+			data[i] = (byte) (value[i] ? 1 : 0);
+		}
+		setValue(data);
+	}
+
 	@Override
 	public byte getID() {
 		return ID;
+	}
+
+	public boolean[] asBoolean() {
+		boolean[] data = new boolean[length()];
+		for(int i = 0; i < length(); i++) {
+			data[i] = getValue()[i] > 0;
+		}
+		return data;
 	}
 
 	@Override

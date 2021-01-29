@@ -95,10 +95,6 @@ public final class SNBTParser implements MaxDepthIO {
 			return new DoubleTag(Double.parseDouble(s.substring(0, s.length() - 1)));
 		} else if (DOUBLE_LITERAL_NO_SUFFIX_PATTERN.matcher(s).matches()) {
 			return new DoubleTag(Double.parseDouble(s));
-		} else if ("true".equalsIgnoreCase(s)) {
-			return new ByteTag(true);
-		} else if ("false".equalsIgnoreCase(s)) {
-			return new ByteTag(false);
 		}
 		return new StringTag(s);
 	}
